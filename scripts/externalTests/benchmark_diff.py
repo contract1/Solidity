@@ -36,12 +36,12 @@ DEFAULT_DIFFERENCE_STYLE = {
 assert all(t in DiffMode for t in DEFAULT_DIFFERENCE_STYLE)
 assert all(d in DifferenceStyle for d in DEFAULT_DIFFERENCE_STYLE.values())
 
-DEFAULT_OUTPUT_FOMAT = {
+DEFAULT_OUTPUT_FORMAT = {
     DiffMode.IN_PLACE: OutputFormat.JSON,
     DiffMode.TABLE: OutputFormat.CONSOLE,
 }
-assert all(m in DiffMode for m in DEFAULT_OUTPUT_FOMAT)
-assert all(o in OutputFormat for o in DEFAULT_OUTPUT_FOMAT.values())
+assert all(m in DiffMode for m in DEFAULT_OUTPUT_FORMAT)
+assert all(o in OutputFormat for o in DEFAULT_OUTPUT_FORMAT.values())
 
 
 class ValidationError(Exception):
@@ -134,7 +134,7 @@ class BenchmarkDiffer:
         return diff
 
     def _humanize_diff(self, diff: Union[str, int, float]) -> str:
-        def wrap(value, symbol):
+        def wrap(value: str, symbol: str):
             return f"{symbol}{value}{symbol}"
 
         markdown = (self.output_format == OutputFormat.MARKDOWN)
@@ -254,7 +254,7 @@ class DiffTableSet:
 
         if isinstance(diff[project], str):
             return diff[project]
-        if not preset in diff[project]:
+        if preset not in diff[project]:
             return ''
         if isinstance(diff[project][preset], str):
             return diff[project][preset]
@@ -394,8 +394,8 @@ def process_commandline() -> CommandLineOptions:
             f"'{OutputFormat.CONSOLE.value}' is a table with human-readable values that will look good in the console output. "
             f"'{OutputFormat.MARKDOWN.value}' is similar '{OutputFormat.CONSOLE.value}' but adjusted to "
             "render as proper markdown and with extra elements (legend, emoji to make non-zero values stand out more, etc)."
-            f"(default: '{DEFAULT_OUTPUT_FOMAT[DiffMode.IN_PLACE]}' in '{DiffMode.IN_PLACE.value}' mode, "
-            f"'{DEFAULT_OUTPUT_FOMAT[DiffMode.TABLE]}' in '{DiffMode.TABLE.value}' mode)"
+            f"(default: '{DEFAULT_OUTPUT_FORMAT[DiffMode.IN_PLACE]}' in '{DiffMode.IN_PLACE.value}' mode, "
+            f"'{DEFAULT_OUTPUT_FORMAT[DiffMode.TABLE]}' in '{DiffMode.TABLE.value}' mode)"
         )
     )
 
@@ -406,15 +406,18 @@ def process_commandline() -> CommandLineOptions:
     else:
         difference_style = DEFAULT_DIFFERENCE_STYLE[DiffMode(options.diff_mode)]
 
+    if options.output_format is not None:
+        output_format = OutputFormat(options.output_format)
+    else:
+        output_format = DEFAULT_OUTPUT_FORMAT[DiffMode(options.diff_mode)]
+
     processed_options = CommandLineOptions(
         diff_mode=DiffMode(options.diff_mode),
         report_before=Path(options.report_before),
         report_after=Path(options.report_after),
         difference_style=difference_style,
         relative_precision=options.relative_precision,
-        output_format=OutputFormat(options.output_format)
-            if options.output_format is not None
-            else DEFAULT_OUTPUT_FOMAT[DiffMode(options.diff_mode)],
+        output_format=output_format,
     )
 
     if processed_options.diff_mode == DiffMode.IN_PLACE and processed_options.output_format != OutputFormat.JSON:
