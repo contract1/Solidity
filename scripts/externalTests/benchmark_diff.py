@@ -175,12 +175,16 @@ def process_commandline() -> CommandLineOptions:
     )
 
     options = parser.parse_args()
+
+    if options.difference_style is not None:
+        difference_style = DifferenceStyle(options.difference_style)
+    else:
+        difference_style = DEFAULT_DIFFERENCE_STYLE
+
     processed_options = CommandLineOptions(
         report_before=Path(options.report_before),
         report_after=Path(options.report_after),
-        difference_style=DifferenceStyle(options.difference_style)
-            if options.difference_style is not None
-            else DEFAULT_DIFFERENCE_STYLE,
+        difference_style=difference_style,
         relative_precision=options.relative_precision,
     )
 
