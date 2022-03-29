@@ -1,5 +1,5 @@
-/*
-	This file is part of solidity.
+
+/*	This file is part of solidity.
 
 	solidity is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
