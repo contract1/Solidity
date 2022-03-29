@@ -37,7 +37,6 @@ This means that cyclic creation dependencies are impossible.
     // SPDX-License-Identifier: GPL-3.0
     pragma solidity >=0.4.22 <0.9.0;
 
-
     contract OwnedToken {
         // `TokenCreator` is a contract type that is defined below.
         // It is fine to reference it as long as it is not used
@@ -78,7 +77,7 @@ This means that cyclic creation dependencies are impossible.
         }
 
         function transfer(address newOwner) public {
-            // Only the current owner can transfer the token.
+            // Only the current owner can transfer the token
             if (msg.sender != owner) return;
 
             // We ask the creator contract if the transfer
@@ -91,11 +90,9 @@ This means that cyclic creation dependencies are impossible.
         }
     }
 
-
     contract TokenCreator {
         function createToken(bytes32 name)
-            public
-            returns (OwnedToken tokenAddress)
+            public returns (OwnedToken tokenAddress)
         {
             // Create a new `Token` contract and return its address.
             // From the JavaScript side, the return type
@@ -113,9 +110,7 @@ This means that cyclic creation dependencies are impossible.
         // Perform checks to determine if transferring a token to the
         // `OwnedToken` contract should proceed
         function isTokenTransferOK(address currentOwner, address newOwner)
-            public
-            pure
-            returns (bool ok)
+            public pure returns (bool ok)
         {
             // Check an arbitrary condition to see if transfer should proceed
             return keccak256(abi.encodePacked(currentOwner, newOwner))[0] == 0x7f;
