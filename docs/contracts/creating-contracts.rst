@@ -1,4 +1,4 @@
-.. index:: ! contract;creation, constructor
+... index:: ! contract;creation, constructor
 
 ******************
 Creating Contracts
@@ -23,7 +23,7 @@ blockchain. This code includes all public and external functions and all functio
 that are reachable from there through function calls. The deployed code does not
 include the constructor code or internal functions only called from the constructor.
 
-.. index:: constructor;arguments
+... index:: constructor;arguments
 
 Internally, constructor arguments are passed :ref:`ABI encoded <ABI>` after the code of
 the contract itself, but you do not have to care about this if you use ``web3.js``.
@@ -32,7 +32,7 @@ If a contract wants to create another contract, the source code
 (and the binary) of the created contract has to be known to the creator.
 This means that cyclic creation dependencies are impossible.
 
-.. code-block:: solidity
+... code-block:: solidity
 
     // SPDX-License-Identifier: GPL-3.0
     pragma solidity >=0.4.22 <0.9.0;
@@ -49,6 +49,7 @@ This means that cyclic creation dependencies are impossible.
         // This is the constructor which registers the
         // creator and the assigned name.
         constructor(bytes32 name_) {
+            
             // State variables are accessed via their name
             // and not via e.g. `this.owner`. Functions can
             // be accessed directly or through `this.f`,
@@ -62,8 +63,8 @@ This means that cyclic creation dependencies are impossible.
             // We perform an explicit type conversion from `address`
             // to `TokenCreator` and assume that the type of
             // the calling contract is `TokenCreator`, there is
-            // no real way to verify that.
-            // This does not create a new contract.
+            // no real way to verify that.           
+           // This does not create a new contract.           
             creator = TokenCreator(msg.sender);
             name = name_;
         }
@@ -97,6 +98,7 @@ This means that cyclic creation dependencies are impossible.
             public
             returns (OwnedToken tokenAddress)
         {
+        
             // Create a new `Token` contract and return its address.
             // From the JavaScript side, the return type
             // of this function is `address`, as this is
@@ -117,6 +119,7 @@ This means that cyclic creation dependencies are impossible.
             pure
             returns (bool ok)
         {
+        
             // Check an arbitrary condition to see if transfer should proceed
             return keccak256(abi.encodePacked(currentOwner, newOwner))[0] == 0x7f;
         }
